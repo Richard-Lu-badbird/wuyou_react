@@ -1,36 +1,37 @@
-function List({children, title, footer=<p>这是我的默认的footer</p>}) {
+import { useState } from "react";
+function Detail ({onActive}) {
+  
+  const [status, setStatus] = useState(true)
+  const [text, setText] = useState('隐藏')
+  function handleClick(e) {
+    setStatus(!status)
+    onActive(status)
+    if (text == '显示') {
+      setText('隐藏')
+    } else {
+      setText('显示')
+    }
+  }
   return (
-    <>
-        <p>{title}</p>
-        <ul>
-          {children}
-        </ul>
-        {footer}
-    </>
-
+    <div>
+      <button onClick={handleClick}>点击按钮，使下方的文字{text}</button>
+      <p style={{
+        display: status ? 'block' : 'none'
+      }}>Detail的内容</p>
+    </div>
   )
 }
 
 
 export default function App() {
 
+
+  function handleClick(status) {
+    console.log(status);
+  }
   return (
     <>
-      <List
-        title="列表1"
-        footer={<p>这是我的单独的footer</p>}
-      >
-        <li>列表项1</li>
-        <li>列表项1</li>
-        <li>列表项1</li>
-      </List>
-      <List
-        title="列表2"
-      >
-        <li>列表项2</li>
-        <li>列表项2</li>
-        <li>列表项2</li>
-      </List>
+      <Detail onActive={handleClick}></Detail>
     </>
   );
 }
