@@ -1,41 +1,32 @@
-import { Fragment } from "react/jsx-runtime";
-import image from "./logo.svg";
-function App() {
-  const imgStyleObj = {
-    width: 200, //这里默认单位是px
-    //width: "100vh"
-    height: 200,
-    backgroundColor: "grey",
-  };
-
-  const imgData = {
-    className: 'hi',
-    style: {
-      width: 200,
-      height: 200,
-      backgroundColor: 'grey'
-    }
-
-  }
+function Detail({content, active}) {
   return (
     <>
-      <div>
-        <img
-          src={image}
-          alt=""
-          className="small"
-          style={imgStyleObj}
-        ></img>
-      </div>
-
-      <div>
-        <img
-        src={image}
-        alt=""
-        {...imgData}></img>
-      </div>
+      <p>{content}</p>
+      <p>状态: {active ? "显示中" : "已隐藏"}</p>
     </>
   );
 }
 
-export default App;
+function Article({ title, detailData }) {
+  return (
+    <div>
+      <h2>{title}</h2>
+      <Detail {...detailData}/>
+    </div>
+  );
+}
+
+export default function App() {
+  const articleData = {
+    title: '标题2',
+    detailData: {
+      content: '内容1',
+      active: true
+    }
+  }
+  return (
+    <>
+      <Article {...articleData} />
+    </>
+  );
+}
