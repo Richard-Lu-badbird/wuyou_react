@@ -2,3 +2,5 @@
 
 Date: 2025/11/26
 Authur: RichardLu
+
+这是一个纯知识点的demo项目，在git log里有不同的实践
