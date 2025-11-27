@@ -1,59 +1,41 @@
-import { createContext, useContext, useState } from "react";
+import { useState,useReducer } from "react"
 
 
-export function Section({children}) {
-  const level = useContext(LevelContext)
-  return (
-    <section className="section">
-      <LevelContext.Provider value={level + 1}>
-        {children}
-      </LevelContext.Provider>
-    </section>
-  )
-}
-
-export function Heading({children}) {
-  const level = useContext(LevelContext)
-  switch (level) {
-    case 1:
-      return <h1>{children}</h1>
-    case 2:
-      return <h2>{children}</h2>
-    case 3:
-      return <h3>{children}</h3>
-    case 4:
-      return <h4>{children}</h4>
-    case 5:
-      return <h5>{children}</h5>
-    case 6:
-      return <h6>{children}</h6> 
+function countReducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return state + 1
+    case 'decrement':
+      return state - 1
     default:
-      throw Error('未知的level:' + level)
+      throw new Error('')
   }
 }
-
-const LevelContext = createContext(1)
 export default function App() {
-  return (
-    <div>
-      <Section>
-        <Heading>主标题</Heading>
-        <Section>
-          <Heading>副标题</Heading>
-          <Heading>副标题</Heading>
-          <Heading>副标题</Heading>
-          <Section>
-            <Heading>子标题</Heading>
-            <Heading>子标题</Heading>
-            <Heading>子标题</Heading>
-            <Section>
-              <Heading>子子标题</Heading>
-            </Section>
-          </Section>
-        </Section>
-      </Section>
-    </div>
-  ) 
-}
+  //Reducer用于统一管理状态的操作方式
+  //先复习useState的方式
 
-//组件间进行通信
+  // const handleIncrement = () => setState(state + 1)
+  // const handleDecrement = () => setState(state - 1)
+  // const [state, setState] = useState(0)
+  // return (
+  //   <div style={{padding: 10}}>
+  //     <button onClick={handleDecrement}>-</button>
+  //     <span>{state}</span>
+  //     <button onClick={handleIncrement}>+</button>
+  //   </div>
+  // )
+
+  //使用Reducer来实现
+
+  const [count, dispatch] = useReducer(countReducer, 0)
+  const handleIncrement = () => dispatch({type: "increment"})
+  const handleDecrement = () => dispatch({type: "decrement"})
+  return (
+    <div style={{padding: 10}}>
+      <button onClick={handleDecrement}>-</button>
+      <span>{count}</span>
+      <button onClick={handleIncrement}>+</button>
+    </div>
+  )
+}
