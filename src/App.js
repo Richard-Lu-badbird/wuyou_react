@@ -1,39 +1,59 @@
-import { useState } from "react";
-function Detail ({onActive}) {
-  
-  const [status, setStatus] = useState(true)
-  const [text, setText] = useState('隐藏')
-  function handleClick(e) {
-    setStatus(!status)
-    onActive(status)
-    if (text == '显示') {
-      setText('隐藏')
-    } else {
-      setText('显示')
-    }
-  }
+import { createContext, useContext, useState } from "react";
+
+
+export function Section({children}) {
+  const level = useContext(LevelContext)
   return (
-    <div>
-      <button onClick={handleClick}>点击按钮，使下方的文字{text}</button>
-      <p style={{
-        display: status ? 'block' : 'none'
-      }}>Detail的内容</p>
-    </div>
+    <section className="section">
+      <LevelContext.Provider value={level + 1}>
+        {children}
+      </LevelContext.Provider>
+    </section>
   )
 }
 
-
-export default function App() {
-
-
-  function handleClick(status) {
-    console.log(status);
+export function Heading({children}) {
+  const level = useContext(LevelContext)
+  switch (level) {
+    case 1:
+      return <h1>{children}</h1>
+    case 2:
+      return <h2>{children}</h2>
+    case 3:
+      return <h3>{children}</h3>
+    case 4:
+      return <h4>{children}</h4>
+    case 5:
+      return <h5>{children}</h5>
+    case 6:
+      return <h6>{children}</h6> 
+    default:
+      throw Error('未知的level:' + level)
   }
-  return (
-    <>
-      <Detail onActive={handleClick}></Detail>
-    </>
-  );
 }
 
-//JSX作为Props来传递
+const LevelContext = createContext(1)
+export default function App() {
+  return (
+    <div>
+      <Section>
+        <Heading>主标题</Heading>
+        <Section>
+          <Heading>副标题</Heading>
+          <Heading>副标题</Heading>
+          <Heading>副标题</Heading>
+          <Section>
+            <Heading>子标题</Heading>
+            <Heading>子标题</Heading>
+            <Heading>子标题</Heading>
+            <Section>
+              <Heading>子子标题</Heading>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
+    </div>
+  ) 
+}
+
+//组件间进行通信
