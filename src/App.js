@@ -1,41 +1,55 @@
-import { useState,useReducer } from "react"
+import { useState, forwardRef, useRef, useImperativeHandle } from "react"
 
+const Child = forwardRef(function (props, ref) {
+  useImperativeHandle(ref, ()=> ({
+    myFn: () => {
+      console.log('子组件myFn方法');
+    }
+  }))
+  return (
+    <div>子组件</div>
+  )
+})
+export default function App(params) {
 
-function countReducer(state, action) {
-  switch (action.type) {
-    case 'increment':
-      return state + 1
-    case 'decrement':
-      return state - 1
-    default:
-      throw new Error('')
-  }
-}
-export default function App() {
-  //Reducer用于统一管理状态的操作方式
-  //先复习useState的方式
-
-  // const handleIncrement = () => setState(state + 1)
-  // const handleDecrement = () => setState(state - 1)
-  // const [state, setState] = useState(0)
+  //事例1:useRef记录普通变量
+  // const [count, setCount] = useState(0)
+  
+  // const prev = useRef()
+  // function handleClick() {
+  //   prev.current = count
+  //   setCount(count + 1)
+  // }
   // return (
-  //   <div style={{padding: 10}}>
-  //     <button onClick={handleDecrement}>-</button>
-  //     <span>{state}</span>
-  //     <button onClick={handleIncrement}>+</button>
+  //    <div>
+  //       <p>最新的count:{count}</p>
+  //       <button onClick={handleClick}>增大count</button>
+  //       <p>旧的count:{prev.current}</p>
+  //    </div>
+  // )
+  //事例2:useRef记录标签
+  // const inputRef = useRef(null)
+  // function handleClick() {
+  //   inputRef.current.focus()
+  // }
+  // return (
+  //   <div>
+  //     <input type="text" ref={inputRef}/>
+  //     <button onClick={handleClick}>按钮</button>
   //   </div>
   // )
 
-  //使用Reducer来实现
 
-  const [count, dispatch] = useReducer(countReducer, 0)
-  const handleIncrement = () => dispatch({type: "increment"})
-  const handleDecrement = () => dispatch({type: "decrement"})
+
+  //事例3:useRef记录子组件
+  const childRef = useRef()
+  function handleClick() {
+    childRef.current.myFn()
+  }
   return (
-    <div style={{padding: 10}}>
-      <button onClick={handleDecrement}>-</button>
-      <span>{count}</span>
-      <button onClick={handleIncrement}>+</button>
+    <div>
+      <Child ref={childRef}/>
+      <button onClick={handleClick}>按钮</button>
     </div>
   )
 }
