@@ -1,39 +1,25 @@
-import { useMemo, useState } from "react"
+import { memo, useCallback, useState } from "react"
 
-function DoSomeMath({value}) {
 
-  const result = useMemo(()=>{
-    console.log('DoSomeMath has done');
-    let result = 0;
-    for (let i = 0; i< 1000000; i++) {
-      result += value * 2
-    }
-    return result;
-  }, [value])
+//记忆组件，memo
+const Button = memo(function ({onClick}) {
+  console.log('Button渲染了');
   
   return (
-    <div>
-      <p>输入内容:{value}</p>
-      <p>经过复杂计算的数据:{result}</p>
-    </div>
+    <button onClick={onClick}>子组件</button>
   )
-}
-
+})
 export default function App() {
 
-  const [inputValue, setInputValue] = useState(5)
   const [count, setCount] = useState(0)
-
-
-  return (
-    <div>
-      <p>count的值为:{count}</p>
-      <button onClick={() => setCount(count + 1)}>点击更新</button>
-      <br/>
-      <br/>
-      <input type="number" value={inputValue} onChange={(e) => setInputValue(parseInt(e.target.value))}/>
-      <DoSomeMath value={inputValue}></DoSomeMath>
-    </div>
-
+  const handleUpdate = () => setCount(count + 1)
+  const handleClick = useCallback(() => console.log('点击按钮'), []);
+  
+  return (<div>
+    <p>count:{count}</p>
+    <button onClick={handleUpdate}>点击</button>
+    <br/>
+    <Button onClick={handleClick}></Button>
+  </div>
   )
 }
